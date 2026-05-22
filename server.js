@@ -10,8 +10,9 @@ const PORT = process.env.PORT || 3001;
 
 // serve react frontend
 app.use(express.static(path.join(__dirname, "dist")));
-app.get("*splat", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
+app.post("/webhook/subotiz", (req, res) => {
+  res.status(200).send("OK");
+  handleWebhookEvent(req.body);
 });
 
 app.listen(PORT, () => console.log(`running on port ${PORT}`));

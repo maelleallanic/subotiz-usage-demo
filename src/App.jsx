@@ -7,11 +7,12 @@ export default function App() {
   const [input, setInput] = useState("");
 
   async function buyTokens() {
-    const pack = TOKEN_PACKS[0]; // 1 tokens for $0.01
+    const pack = TOKEN_PACKS[0];
     const session = await createCheckoutSession(pack.priceId, pack.tokens);
-    await processPayment(session.session_id);
-    setTokens((t) => t + pack.tokens);
-  }
+    if (session.checkout_url) {
+      window.location.href = session.checkout_url;
+    }
+}
 
   function sendMessage() {
     if (!input.trim() || tokens < 1) return;
