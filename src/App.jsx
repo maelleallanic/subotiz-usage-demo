@@ -9,10 +9,12 @@ export default function App() {
   async function buyTokens() {
     const pack = TOKEN_PACKS[0];
     const session = await createCheckoutSession(pack.priceId, pack.tokens);
-    if (session.checkout_url) {
-      window.location.href = session.checkout_url;
+    if (session.data?.session_url) {
+      window.location.href = session.data.session_url;
+    } else {
+      console.error("no session url", session);
     }
-}
+  }
 
   function sendMessage() {
     if (!input.trim() || tokens < 1) return;
