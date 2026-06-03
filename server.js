@@ -3,9 +3,18 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 
+const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT || 3001}`;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 app.use(express.json());
+
+app.post("/api/webhook/subotiz", (req, res) => {
+  console.log("========== WEBHOOK RECEIVED ==========");
+  console.log(JSON.stringify(req.body, null, 2));
+  console.log("======================================");
+
+  res.sendStatus(200);
+});
 
 app.post("/api/buy-tokens", async (req, res) => {
   console.log("buy-tokens called", req.body);
@@ -23,8 +32,8 @@ app.post("/api/buy-tokens", async (req, res) => {
       order_id: "order_" + Date.now(),
       email: "customer@example.com",
       line_items: [{ price_id: req.body.price_id, quantity: "1" }],
-      return_url: "http://localhost:3001",
-      cancel_url: "http://localhost:3001",
+      return_url: `${BASE_URL}/success`,
+      cancel_url: `${BASE_URL}/cancel`,
     }),
   });
   const text = await response.text();
