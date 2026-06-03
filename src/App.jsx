@@ -16,10 +16,23 @@ export default function App() {
     }
   }
 
-  function sendMessage() {
+  async function sendMessage() {
     if (!input.trim() || tokens < 1) return;
+
+    const res = await fetch("/api/use-token", {
+      method: "POST",
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error(data);
+      setTokens(data.tokens || 0);
+      return;
+    }
+
     setMessages((m) => [...m, { user: input, bot: "meow" }]);
-    setTokens((t) => t - 1);
+    setTokens(data.tokens);
     setInput("");
   }
 

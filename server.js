@@ -26,6 +26,15 @@ app.get("/api/tokens", (req, res) => {
   res.json({ tokens });
 });
 
+app.post("/api/use-token", (req, res) => {
+  if (tokens < 1) {
+    return res.status(400).json({ error: "not enough tokens", tokens });
+  }
+
+  tokens -= 1;
+  res.json({ tokens });
+});
+
 app.post("/api/buy-tokens", async (req, res) => {
   console.log("buy-tokens called", req.body);
   const url = "https://api.sandbox.subotiz.com/api/v1/session";
