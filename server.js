@@ -2,7 +2,9 @@ import "dotenv/config";
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
+import crypto from "crypto";
 
+let tokens = 0;
 const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT || 3001}`;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -11,9 +13,17 @@ app.use(express.json());
 app.post("/api/webhook/subotiz", (req, res) => {
   console.log("========== WEBHOOK RECEIVED ==========");
   console.log(JSON.stringify(req.body, null, 2));
-  console.log("======================================");
+
+  if (req.body.type === "v2.trades.succeeded") {
+    tokens += 1;
+    console.log("tokens:", tokens);
+  }
 
   res.sendStatus(200);
+});
+
+app.get("/api/tokens", (req, res) => {
+  res.json({ tokens });
 });
 
 app.post("/api/buy-tokens", async (req, res) => {

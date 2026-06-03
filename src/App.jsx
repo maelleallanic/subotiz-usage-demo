@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createCheckoutSession, processPayment, TOKEN_PACKS } from "./subotiz";
 
 export default function App() {
@@ -23,11 +23,21 @@ export default function App() {
     setInput("");
   }
 
+  useEffect(() => {
+    async function loadTokens() {
+      const res = await fetch("/api/tokens");
+      const data = await res.json();
+      setTokens(data.tokens);
+    }
+
+    loadTokens();
+  }, []);
+
   return (
     <div style={{ maxWidth: 400, margin: "40px auto", fontFamily: "monospace" }}>
       <h2>meowbot</h2>
       <p>tokens: {tokens}</p>
-      <button onClick={buyTokens}>buy 1 token ($0.01)</button>
+      <button onClick={buyTokens}>buy 1 token ($5.00)</button>
 
       <div style={{ marginTop: 20 }}>
         {messages.map((m, i) => (
